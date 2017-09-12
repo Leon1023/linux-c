@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
   printf ("please input some characters:\n");
   while((c=getchar())!='\n')
     {
-      if(c>='a'&&c<='z'||c>='A'&&c<='Z')
+      if((c>='a'&&c<='z')||(c>='A'&&c<='Z'))
 	letters++;
       else if(c==' ')
 	space++;

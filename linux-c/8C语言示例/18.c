@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
   printf ("a=%d,n=%d\n",a,n);
   while(count<=n)
     {
-      tn=tn+a;
-      sn=sn+tn;
-      a=a*10;
+      tn+=a;
+      sn+=tn;
+      a*=10;
       ++count;
     }
   printf ("a+aa+...=%ld\n",sn);
