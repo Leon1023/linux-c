@@ -1,4 +1,3 @@
-
 /****************************************
 技巧01：三大基本排序:冒泡排序，选择排序，插入排序
 -->三种方法的时间复杂度均为T(n)=O(n²)，适合小规模的排序场合
@@ -412,73 +411,82 @@ int main(int argc, char *argv[])
 */
 /****************************************
 技巧05:快速排序
-主要的算法思想是在带排序的n个数据中取第一个数据作为基准值，将所有的记录分为3组，使得
-第一组中各数据值均小于或等于基准值，第二组便是做基准值的数据，第三组中个数举值均大于
-或等于基准值。这便实现了第一趟分隔，然后再对第一组和第三组分别重复上述方法。
+主要的算法思想是在带排序的n个数据中取第一个数据作为基准值，
+将所有的记录分为3组，使得第一组中各数据值均小于或等于基准值，
+第二组便是做基准值的数据，第三组中个数值均大于或等于基准值。
+这便实现了第一趟分隔，然后再对第一组和第三组分别重复上述方法。
 ****************************************/
 /*
 #include <stdio.h>
 #define MAX 100
-int SR[MAX+1];
-int n;
 
-
-void disp(int a[])//显示待排序数组的当前状态
+void display(int a[],int n)//显示待排序数组的当前状态
 {
-	int i=1;
+	int i=1,Num=n;
 //	printf("\n\t");
-	for(;i<=n;++i)
+	for(;i<=Num;++i)
 		printf("%4d",a[i]);
 	printf("\n");
 }
 
-void qusort(int start,int end)
-{          //自定义快排函数
-  int i,j;                   
+//自定义快排函数
+void quick_sort(int start,int end,int *a)
+{ int i,j;   
+  int *SR=a;
   i=start;
   j=end;
   SR[0]=SR[i];            //设置基准值
   while(i<j)
     {
-      while(i<j&&SR[0]<SR[j]) j--;                //位置左移
-      if(i<j) SR[i++]=SR[j];        //将s[j]放到s[i]的位置上,i位置右移
-      while(i<j&&SR[i]<=SR[0]) i++;                //位置右移
-      if (i<j) SR[j--]=SR[i];        //将大于基准值的s[j]放到s[i]位置,j位置右移
+      while((i<j)&&(SR[0]<SR[j])){      //由尾向头找到首个小于基准值位置
+        --j;
+      }
+      if(i<j){ 
+        SR[i++]=SR[j];        //将s[j]放到s[i]的位置上,i位置右移
+      }
+      while((i<j)&&(SR[i]<=SR[0])){       //由头向尾找到首个大于基准值位置
+        ++i;
+      }
+      if (i<j){
+        SR[j--]=SR[i];        //将大于基准值的s[i]放到s[j]位置,j位置前移
+      }
     }  
   SR[i]=SR[0];                //将基准值放入指定位置
-  if(start<i) qusort(start,j-1);    //对分隔出的部分递归调用函数qusort()
-  if(i<end)  qusort(j+1,end);
+  if(start<i) quick_sort(start,i-1,SR);    //对分隔出的部分递归调用函数qusort()
+  if(i<end)  quick_sort(i+1,end,SR);
 }
 
 int main(void)
 {
+  int Num;    //用户输入的待排序数
+  int SR[MAX+1];
   int i=0;
   while(1){
 	  printf ("\nHow many numbers do you sored:");
-	  scanf("%d",&n);
-	  if(n<=MAX) break;
+	  scanf("%d",&Num);
+	  if(Num<=MAX) break;
 	  printf("\nnumber you sorted must small than %d!",MAX);
   }
-  for(i=1;i<=n;++i){        //从键盘中输入n个数
+  for(i=1;i<=Num;++i){        //从键盘中输入n个数
     printf("\nnumber %d:",i);
     scanf("%d",&SR[i]); 
   }
   printf("\nbefor sorted:");
-  disp(SR);
-  qusort(1,n);     //调用merge_sort函数进行归并排序
+  display(SR,Num);
+  quick_sort(1,Num,SR);     //调用merge_sort函数进行归并排序
   printf("\nafter sorted:");
-  disp(SR);
+  display(SR,Num);
 }
 */
 
-
 /****************************************
 技巧06:快速排序(seq)
-主要的算法思想是在带排序的n个数据中取第一个数据作为基准值，将所有的记录分为3组，使得
-第一组中各数据值均小于或等于基准值，第二组便是做基准值的数据，第三组中个数举值均大于
-或等于基准值。这便实现了第一趟分隔，然后再对第一组和第三组分别重复上述方法。
+主要的算法思想是在带排序的n个数据中取第一个数据作为基准值，
+将所有的记录分为3组，使得第一组中各数据值均小于或等于基准值，
+第二组便是做基准值的数据，第三组中个数值均大于或等于基准值。
+这便实现了第一趟分隔，然后再对第一组和第三组分别重复上述方法。
 ****************************************/
-/*
+
 #include <stdio.h>
 #define OVER -1		//flag of sequeue empty or full
 #define MAX 100			//maxed number of be sorted
@@ -488,10 +496,10 @@ int n,s[MAX+1];	//n代表实际待排序个数，SR代表待排序数组，SR[0]
 typedef struct{
 	int d[MAXS];
 	int front,rear;
-}sequeue;//存放各子序列开头位置的循环队列的数据结构
+}sequeue;           //存放各子序列开头位置的循环队列的数据结构
 sequeue sq;
 
-int in_seq(int x)//如果队列未满，则子序列其实位置入队
+int in_seq(int x)   //如果队列未满，则子序列其实位置入队
 {
 	int i;
 	if(sq.front==(sq.rear+1)%MAXS)
@@ -512,7 +520,7 @@ int out_seq(void)//如果循环队列非空，则将一个子序列的起始位�
 	}
 }
 
-void disp(int a[])//显示待排序数组的当前状态
+void display(int a[])//显示待排序数组的当前状态
 {
 	int i=1;
 //	printf("\n\t");
@@ -550,8 +558,6 @@ int seq_qusort(void)
 		}
 	}
 }
-
-
 
 
 int main(void)
