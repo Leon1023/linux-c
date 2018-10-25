@@ -7,7 +7,7 @@
  * 总调控值:control=KP*e+KI*sum_e+KD*de_n
  *
 ************************************/
-/*
+
 float KP,KI,KD;
 float set,LE,sum_e;//LE->the e of last time
 
@@ -26,8 +26,6 @@ void TaskSmpCrl(void *pdata)
 	}
 }
 
-*/
-
 
 /************************************
  * 02.增量PID算法
@@ -38,9 +36,9 @@ void TaskSmpCrl(void *pdata)
  * 总调控值:deta_control=KP*de+KI*e+KD*(de_n-de_n-1)
  *
 ************************************/
-/*
+
 float KP,KI,KD;
-float set,LDE;//LDE->the de of last time
+float set,LDE;      //LDE->the de of last time
 
 void TaskSmpCrl(void *pdata)
 {
@@ -56,4 +54,3 @@ void TaskSmpCrl(void *pdata)
 		delay(T);
 	}
 }
-*/
