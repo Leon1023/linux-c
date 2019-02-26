@@ -3,6 +3,7 @@
  */
 #include <panel.h>
 #include <ncurses.h>
+#include <stdlib.h>
 
 #define NLINES 10
 #define NCOLS 40
@@ -29,7 +30,7 @@ int main()
 
     int ch;
     int newx, newy, neww, newh;
-    int size = FALSE, move = FALSE;
+    int size = FALSE, move = FALSE, hide = FALSE, show = TRUE;
 
     /* 初始化 curses */
     initscr();
@@ -56,8 +57,8 @@ int main()
     /* 在屏幕上显示出来 */
     update_panels();
     attron(COLOR_PAIR(4));
-    mvprintw(LINES - 3, 0, "Use 'm' for moving, 'r' for resizing");
-    mvprintw(LINES - 2, 0, "Use tab to browse through the windows (F1 to Exit)");
+    mvprintw(LINES - 3, 0, "Use 'm' for moving, 'r' for resizing, 'h' for change states in hide or show");
+    mvprintw(LINES - 2, 0, "Use 'tab' to browse through the windows (F1 to Exit)");
     attroff(COLOR_PAIR(4));
     doupdate();
 
@@ -93,6 +94,20 @@ int main()
                 refresh();
                 attroff(COLOR_PAIR(4));
                 move = TRUE;
+                break;
+            case 'h': /* 隐藏面板*/
+                hide = TRUE;
+                attron(COLOR_PAIR(4));
+                mvprintw(LINES - 4, 0, "Entered Hiding :Use press <ENTER> to be firm");
+                refresh();
+                attroff(COLOR_PAIR(4));
+                break;
+            case 's': /* 显示面板*/
+                show = TRUE;
+                attron(COLOR_PAIR(4));
+                mvprintw(LINES - 4, 0, "Entered Showing :Use press <ENTER> to be firm");
+                refresh();
+                attroff(COLOR_PAIR(4));
                 break;
             case KEY_LEFT:
                 if(size == TRUE){ 
@@ -142,10 +157,22 @@ int main()
                     move_panel(stack_top,newy, newx);
                     move = FALSE;
                 }
+                if(hide == TRUE){
+                    hide_panel(stack_top);
+                    hide = FALSE;
+                }
+                //else
+                  //  show_panel(stack_top);
+                if(show == TRUE){
+                  //  hide_panel(stack_top);
+               // else
+                    show_panel(stack_top);
+                    show = FALSE;
+                }
                 break;
         }
     attron(COLOR_PAIR(4));
-    mvprintw(LINES - 3, 0, "Use 'm' for moving, 'r' for resizing");
+    mvprintw(LINES - 3, 0, "Use 'm' for moving, 'r' for resizing, 'h' for hiding , 's' for showing");
     mvprintw(LINES - 2, 0, "Use tab to browse through the windows (F1 to Exit)");
     attroff(COLOR_PAIR(4));
     refresh();
@@ -155,6 +182,7 @@ int main()
     endwin();
     return 0;
 }
+
 
 
 /* 显示所有的窗口 */
